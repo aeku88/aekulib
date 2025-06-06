@@ -1,8 +1,10 @@
 #pragma once
 
 #include "pros/distance.hpp"
-#include "api/units.h"
+#include "units.h"
 #include <cstdint>
+
+using namespace units;
 
 namespace aekulib
 {
@@ -11,7 +13,7 @@ namespace aekulib
       public:
         explicit Distance(const std::uint8_t port);
 
-        units::length::millimeter_t get() const;
+        inches<> get() const;
 
         double getConfidence() const;
 

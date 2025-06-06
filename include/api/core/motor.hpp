@@ -2,10 +2,12 @@
 
 #include "pros/abstract_motor.hpp"
 #include "pros/motors.hpp"
-#include "api/units.h"
+#include "units.h"
+#include "units/angular_velocity.h"
+#include "units/torque.h"
 #include <cstdint>
 
-using namespace units::literals;
+using namespace units;
 
 namespace aekulib
 {
@@ -19,12 +21,7 @@ namespace aekulib
                        const pros::v5::MotorGears gearset
                        = pros::v5::MotorGears::invalid);
 
-        void move(const units::voltage::millivolt_t voltage) const;
-
-        /**
-         * Set motor velocity in RPM.
-         */
-        void move(const units::angular_velocity::revolutions_per_minute_t rpm) const;
+        void move(const volts<> voltage) const;
 
         /** Stops the motor according to brake mode. */
         void brake();
@@ -42,31 +39,29 @@ namespace aekulib
         /**
          * Get current motor position (degrees).
          */
-        units::angle::degree_t getPosition() const;
+        degrees<> getPosition() const;
 
         /**
          * Get target velocity (RPM) setpoint.
          */
-        units::angular_velocity::revolutions_per_minute_t
-        getTargetVelocity() const;
+        revolutions_per_minute<> getTargetVelocity() const;
 
         /**
          * Get actual motor velocity (RPM).
          */
-         units::angular_velocity::revolutions_per_minute_t
-        getActualVelocity() const;
+        revolutions_per_minute<> getActualVelocity() const;
 
         /**
          * Get motor current draw (amps).
          */
-        units::current::ampere_t getCurrentDraw() const;
+        amperes<> getCurrentDraw() const;
 
         std::int32_t getDirection() const;
 
         /**
          * Get motor temperature (Celsius).
          */
-        units::temperature::celsius_t getTemperature() const;
+        celsius<> getTemperature() const;
 
         /**
          * Get motor efficiency (0.0-1.0).
@@ -74,21 +69,21 @@ namespace aekulib
         double getEfficiency() const;
 
         /**
-         * Get motor torque (newton-meters).
+         * Get motor torque.
          */
-        units::torque::newton_meter_t getTorque() const;
+        newton_meters<> getTorque() const;
 
         /**
-         * Get motor power (milliwatts).
+         * Get motor power.
          */
-        units::power::milliwatt_t getPower() const;
+        watts<> getPower() const;
 
         /**
          * Get motor voltage (millivolts).
          */
-        units::voltage::millivolt_t getVoltage() const;
+        volts<> getVoltage() const;
 
       private:
-        std::shared_ptr<pros::Motor> motor_;
+        std::shared_ptr<pros::Motor> m_motor;
     };
 }

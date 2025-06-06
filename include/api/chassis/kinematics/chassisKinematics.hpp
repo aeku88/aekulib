@@ -1,13 +1,11 @@
 #pragma once
 
 #include "Eigen/Eigen"
-#include "api/units.h"
+#include "units.h"
+
 #include "api/chassis/chassisConfiguration.hpp"
 
-using namespace units::literals;
-
-using namespace units::velocity;
-using namespace units::angular_velocity;
+using namespace units;
 
 namespace aekulib
 {
@@ -16,11 +14,11 @@ namespace aekulib
       public:
         ChassisKinematics(const std::shared_ptr<ChassisConfiguration> &iconfig);
 
-        std::pair<feet_per_second_t, radians_per_second_t> forward(
-          const Eigen::Vector2<revolutions_per_minute_t> iwheelVelocities);
+        std::pair<inches_per_second<>, radians_per_second<>> forward(
+          const Eigen::Vector2<revolutions_per_minute<>> iwheelVelocities);
 
-        Eigen::Vector2<revolutions_per_minute_t>
-        inverse(const std::pair<feet_per_second_t, radians_per_second_t>
+        Eigen::Vector2<revolutions_per_minute<>>
+        inverse(const std::pair<inches_per_second<>, radians_per_second<>>
                   ichassisVelocities);
     private:
         std::shared_ptr<ChassisConfiguration> config; 

@@ -4,16 +4,15 @@ namespace aekulib
 {
     Distance::Distance(const std::uint8_t port)
         : distance_(std::make_shared<pros::Distance>(port))
-    {
-    }
+    {}
 
-    units::length::millimeter_t Distance::get() const
+    inches<> Distance::get() const
     {
-        return units::length::millimeter_t(distance_->get());
+        return millimeters(distance_->get());
     }
 
     double Distance::getConfidence() const
     {
-        return distance_->get_distance();
+        return distance_->get_confidence();
     }
 }

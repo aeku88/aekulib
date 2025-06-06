@@ -1,5 +1,6 @@
 #include "api/core/imu.hpp"
-#include "api/units.h"
+#include "Eigen/src/Core/Matrix.h"
+#include "units.h"
 
 namespace aekulib
 {
@@ -23,86 +24,57 @@ namespace aekulib
 
     int IMU::tareEuler() { return imu_.tare_euler(); }
 
-    units::angle::degree_t IMU::getHeading() const
+    degrees<> IMU::getHeading() const
     {
-        return units::angle::degree_t{imu_.get_heading()};
+        return degrees(imu_.get_heading());
     }
 
-    void IMU::setHeading(units::angle::degree_t target)
+    void IMU::setHeading(degrees<> target)
     {
-        imu_.set_heading(static_cast<std::uint32_t>(target.to<double>()));
+        imu_.set_heading(target.to<int32_t>());
     }
 
-    units::angle::degree_t IMU::getYaw() const
+    degrees<> IMU::getYaw() const
     {
-        return units::angle::degree_t{imu_.get_yaw()};
+        return degrees(imu_.get_yaw());
     }
 
-    void IMU::setYaw(units::angle::degree_t target)
+    void IMU::setYaw(degrees<> target)
     {
-        imu_.set_yaw(target.to<double>());
+        imu_.set_yaw(target.to<int32_t>());
     }
 
-    units::angle::degree_t IMU::getPitch() const
+    degrees<> IMU::getPitch() const
     {
-        return units::angle::degree_t{imu_.get_pitch()};
+        return degrees<>(imu_.get_pitch());
     }
 
-    void IMU::setPitch(units::angle::degree_t target)
+    void IMU::setPitch(degrees<> target)
     {
-        imu_.set_pitch(target.to<double>());
+        imu_.set_pitch(target.to<int32_t>());
     }
 
-    units::angle::degree_t IMU::getRoll() const
+    degrees<> IMU::getRoll() const
     {
-        return units::angle::degree_t{imu_.get_roll()};
+        return degrees(imu_.get_roll());
     }
 
-    void IMU::setRoll(units::angle::degree_t target)
+    void IMU::setRoll(degrees<> target)
     {
-        imu_.set_roll(target.to<double>());
+        imu_.set_roll(target.to<int32_t>());
     }
 
-    IMU::Euler IMU::getEuler() const
+    degrees<> IMU::getRotation() const
     {
-        auto e = imu_.get_euler();
-        return {units::angle::degree_t{e.roll},
-                units::angle::degree_t{e.pitch},
-                units::angle::degree_t{e.yaw}};
+        return degrees(imu_.get_rotation());
     }
 
-    void IMU::setEuler(const Euler &target)
-    {
-        pros::euler_s_t e{target.roll.to<double>(), target.pitch.to<double>(),
-                          target.yaw.to<double>()};
-        imu_.set_euler(e);
-    }
-
-    units::angle::degree_t IMU::getRotation() const
-    {
-        return units::angle::degree_t{imu_.get_rotation()};
-    }
-
-    IMU::Gyro IMU::getGyroRate() const
-    {
-        auto g = imu_.get_gyro_rate();
-        return {units::angular_velocity::degrees_per_second_t{g.x},
-                units::angular_velocity::degrees_per_second_t{g.y},
-                units::angular_velocity::degrees_per_second_t{g.z}};
-    }
-
-    IMU::Accel IMU::getAccel() const
+    Eigen::Vector3<inches_per_second_squared<>> IMU::getAccel() const
     {
         auto a = imu_.get_accel();
         return {
-          units::acceleration::meters_per_second_squared_t{a.x * 9.80665},
-          units::acceleration::meters_per_second_squared_t{a.y * 9.80665},
-          units::acceleration::meters_per_second_squared_t{a.z * 9.80665}};
-    }
-
-    Eigen::Quaterniond IMU::getQuaternion() const
-    {
-        auto q = imu_.get_quaternion();
-        return Eigen::Quaterniond(q.w, q.x, q.y, q.z);
+          meters_per_second_squared(a.x * 9.80665),
+          meters_per_second_squared(a.y * 9.80665),
+          meters_per_second_squared(a.z * 9.80665)};
     }
 } // namespace aekulib::core
