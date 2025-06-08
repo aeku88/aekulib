@@ -18,6 +18,7 @@ namespace aekulib
         void step() override;
 
       private:
+        std::shared_ptr<MotorGroup> left, right;
         void loop();
 
         pros::Task loopTask;

@@ -14,7 +14,10 @@ namespace aekulib
         m_motorGroup->set_encoder_units(pros::MotorEncoderUnits::degrees);
     }
 
-    void MotorGroup::move(const volts<> voltage) const { m_motorGroup->move_voltage(voltage.to<int32_t>()); }
+    void MotorGroup::move(const volts<> voltage) const
+    {
+        m_motorGroup->move_voltage(convert<millivolts<>>(voltage).value());
+    }
 
     void MotorGroup::move(const revolutions_per_minute<> omega) const
     {

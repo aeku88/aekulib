@@ -6,8 +6,8 @@ namespace aekulib
       const std::shared_ptr<MotorGroup> ileft, const PIDController<revolutions_per_minute<>> ileftController,
       const std::shared_ptr<MotorGroup> iright,
       const PIDController<revolutions_per_minute<>> irightController)
-        : DifferentialDriveChassisModel(ileft, iright), leftController(ileftController),
-          rightController(irightController), loopTask([this] {
+        : left(ileft), right(iright), leftController(ileftController), rightController(irightController),
+          loopTask([this] {
               this->loop();
               pros::delay(10);
           })
@@ -36,7 +36,5 @@ namespace aekulib
 
         left->move(leftController.getOutput());
         right->move(rightController.getOutput());
-
-        pros::delay(10);
     }
 }
