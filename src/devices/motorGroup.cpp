@@ -8,7 +8,7 @@ namespace aekulib
         m_motorGroup->set_encoder_units(pros::MotorEncoderUnits::degrees);
     }
 
-    MotorGroup::MotorGroup(const std::vector<int8_t> &ports, const pros::v5::MotorGears gearset)
+    MotorGroup::MotorGroup(const std::vector<int8_t> ports, const pros::v5::MotorGears gearset)
         : m_motorGroup(std::make_shared<pros::MotorGroup>(ports, gearset))
     {
         m_motorGroup->set_encoder_units(pros::MotorEncoderUnits::degrees);

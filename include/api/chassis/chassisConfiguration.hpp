@@ -12,7 +12,8 @@ namespace aekulib
     {
       public:
         ChassisConfiguration(const inches<> iwheelDiameter, const inches<> itrackWidth,
-                             const pros::MotorGears &igearset, const double igearRatio);
+                             const pros::MotorGears &igearset, const double igearRatio) : wheelDiameter(iwheelDiameter), trackWidth(itrackWidth), gearset(igearset), gearRatio(igearRatio)
+                             {}
 
         inline inches<> getWheelDiameter() const { return wheelDiameter; }
         inline inches<> getTrackWidth() const { return trackWidth; }

@@ -77,16 +77,16 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 
-std::vector<uint8_t> leftPorts = {1, 2}, rightPorts = {3, 4};
+std::vector<int> leftPorts = {1, 11}, rightPorts = {-10, -18};
 
-auto left = std::make_shared<aekulib::MotorGroup>(leftPorts),
-     right = std::make_shared<aekulib::MotorGroup>(rightPorts);
+auto left = std::shared_ptr<aekulib::MotorGroup>(new aekulib::MotorGroup({1, 11})),
+     right = std::shared_ptr<aekulib::MotorGroup>(new aekulib::MotorGroup({-10, -18}));
 
 auto config = std::make_shared<aekulib::ChassisConfiguration>(2.75_in, 10_in, pros::MotorGears::blue, 1.0);
 
 auto kinematics = aekulib::ChassisKinematics(config);
 
-auto controllerGains = aekulib::PIDGains(1.0, 0.0, 0.0);
+auto controllerGains = aekulib::PIDGains(0.5, 0.0, 0.0);
 
 auto leftController = aekulib::PIDController<revolutions_per_minute<>>(controllerGains),
      rightController = aekulib::PIDController<revolutions_per_minute<>>(controllerGains);
@@ -105,6 +105,7 @@ void opcontrol()
           = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X) / 127.0 * 17.278 * rps;
 
         model.drive(kinematics.inverse({linVel, angVel}));
+		model.step();
 
         pros::delay(10);
     }
