@@ -22,7 +22,7 @@ BraceWrapping:
   AfterExternBlock: true
   BeforeCatch:     true
   BeforeElse:      true
-  IndentBraces:    true
+  IndentBraces:    false
   SplitEmptyFunction: false
   SplitEmptyRecord: false
   SplitEmptyNamespace: false
@@ -40,3 +40,4 @@ SortIncludes: false
 SpaceBeforeParens: Never
 SpacesInContainerLiterals: false
 Standard:        Latest
+ColumnLimit: 110

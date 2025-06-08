@@ -1,26 +1,25 @@
 #pragma once
 
 #include "pros/abstract_motor.hpp"
-#include "units.h"
+
+#include "units/length.h"
 
 using namespace units;
 
-namespace aekulib 
+namespace aekulib
 {
     class ChassisConfiguration
     {
-    public:
-        ChassisConfiguration(const inches<> iwheelDiameter,
-                             const inches<> itrackWidth,
-                             const pros::MotorGears &igearset,
-                             const double igearRatio);
-    
+      public:
+        ChassisConfiguration(const inches<> iwheelDiameter, const inches<> itrackWidth,
+                             const pros::MotorGears &igearset, const double igearRatio);
+
         inline inches<> getWheelDiameter() const { return wheelDiameter; }
         inline inches<> getTrackWidth() const { return trackWidth; }
         inline pros::MotorGears getGearset() const { return gearset; }
         inline double getGearRatio() const { return gearRatio; }
-    
-    private:
+
+      private:
         inches<> wheelDiameter, trackWidth;
         pros::MotorGears gearset;
         double gearRatio;

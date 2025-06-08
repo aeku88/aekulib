@@ -50,17 +50,18 @@
 
 namespace units
 {
-	/**
-	 * @namespace	units::impedance
-	 * @brief		namespace for unit types and containers representing impedance values
-	 * @details		The SI unit for impedance is `ohms`, and the corresponding `dimension` dimension is
-	 *				`impedance_unit`.
-	 * @anchor		impedanceContainers
-	 * @sa			See unit for more information on unit type containers.
-	 */
-	UNIT_ADD_WITH_METRIC_PREFIXES(impedance, ohms, Ohm, conversion_factor<std::ratio<1>, dimension::impedance>)
+    /**
+     * @namespace	units::impedance
+     * @brief		namespace for unit types and containers representing impedance values
+     * @details		The SI unit for impedance is `ohms`, and the corresponding `dimension` dimension is
+     *				`impedance_unit`.
+     * @anchor		impedanceContainers
+     * @sa			See unit for more information on unit type containers.
+     */
+    UNIT_ADD_WITH_METRIC_PREFIXES(impedance, ohms, Ohm,
+                                  conversion_factor<std::ratio<1>, dimension::impedance>)
 
-	UNIT_ADD_DIMENSION_TRAIT(impedance)
+    UNIT_ADD_DIMENSION_TRAIT(impedance)
 } // namespace units
 
 #endif // units_impedance_h_
