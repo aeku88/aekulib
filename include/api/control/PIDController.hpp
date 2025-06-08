@@ -24,19 +24,14 @@ namespace aekulib
     {
       public:
         PIDController(const PIDGains &igains, const milliseconds<std::uint8_t> itickDelay = 10_ms);
-        ~PIDController() { step_task.remove(); }
 
         void setTarget(const T isetpoint);
+
+        void step();
 
         T getOutput();
 
       private:
-        void loop();
-
-        void step();
-
-        pros::Task step_task;
-
         PIDGains gains;
         T setpoint, processVariable, previousError, integral;
 
@@ -46,23 +41,9 @@ namespace aekulib
     template <class T>
     PIDController<T>::PIDController(const PIDGains &igains, const milliseconds<std::uint8_t> itickDelay)
         : gains(igains), tickDelay(itickDelay)
-    {
-        step_task([this] {
-            this->loop();
-            pros::delay(10);
-        });
-    }
+    {}
 
     template <class T> void PIDController<T>::setTarget(const T isetpoint) { setpoint = isetpoint; }
-
-    template <class T> void PIDController<T>::loop()
-    {
-        while(true)
-        {
-            step();
-            pros::delay(tickDelay.value());
-        }
-    }
 
     template <class T> void PIDController<T>::step()
     {

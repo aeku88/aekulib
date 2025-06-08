@@ -27,6 +27,9 @@ namespace aekulib
         explicit MotorGroup(const std::initializer_list<int8_t>,
                             const pros::v5::MotorGears gearset = pros::v5::MotorGears::invalid);
 
+        explicit MotorGroup(const std::vector<int8_t> &ports,
+                            const pros::v5::MotorGears gearset = pros::v5::MotorGears::invalid);
+
         void move(const volts<> voltage) const;
 
         void move(const revolutions_per_minute<> omega) const;

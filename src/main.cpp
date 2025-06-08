@@ -1,7 +1,6 @@
 #include "main.h"
-#include "api/control/PIDController.hpp"
-#include "units/angular_velocity.h"
-#include "units/length.h"
+#include "pros/misc.h"
+#include "units/velocity.h"
 
 /**
  * A callback function for LLEMU's center button.
@@ -78,4 +77,35 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 
-void opcontrol() {}
+std::vector<uint8_t> leftPorts = {1, 2}, rightPorts = {3, 4};
+
+auto left = std::make_shared<aekulib::MotorGroup>(leftPorts),
+     right = std::make_shared<aekulib::MotorGroup>(rightPorts);
+
+auto config = std::make_shared<aekulib::ChassisConfiguration>(2.75_in, 10_in, pros::MotorGears::blue, 1.0);
+
+auto kinematics = aekulib::ChassisKinematics(config);
+
+auto controllerGains = aekulib::PIDGains(1.0, 0.0, 0.0);
+
+auto leftController = aekulib::PIDController<revolutions_per_minute<>>(controllerGains),
+     rightController = aekulib::PIDController<revolutions_per_minute<>>(controllerGains);
+
+auto model = aekulib::DifferentialDriveChassisModelPID(left, leftController, right, rightController);
+
+void opcontrol()
+{
+    pros::Controller master(pros::E_CONTROLLER_MASTER);
+
+    while(true)
+    {
+        inches_per_second<> linVel
+          = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) / 127.0 * 86.39 * ips;
+        radians_per_second<> angVel
+          = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X) / 127.0 * 17.278 * rps;
+
+        model.drive(kinematics.inverse({linVel, angVel}));
+
+        pros::delay(10);
+    }
+}

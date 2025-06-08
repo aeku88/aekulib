@@ -1,5 +1,6 @@
 #include "api/chassis/model/DDChassisModel.hpp"
 #include "api/control/PIDController.hpp"
+#include "pros/rtos.hpp"
 
 using namespace units::literals;
 
@@ -17,6 +18,10 @@ namespace aekulib
         void step() override;
 
       private:
+        void loop();
+
+        pros::Task loopTask;
+
         PIDController<revolutions_per_minute<>> leftController, rightController;
     };
 }

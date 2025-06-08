@@ -1,6 +1,4 @@
 #include "api/chassis/model/DDChassisModelPID.hpp"
-#include "pros/rtos.hpp"
-#include "units/impedance.h"
 
 namespace aekulib
 {
@@ -9,8 +7,19 @@ namespace aekulib
       const std::shared_ptr<MotorGroup> iright,
       const PIDController<revolutions_per_minute<>> irightController)
         : DifferentialDriveChassisModel(ileft, iright), leftController(ileftController),
-          rightController(irightController)
+          rightController(irightController), loopTask([this] {
+              this->loop();
+              pros::delay(10);
+          })
+    {}
+
+    void DifferentialDriveChassisModelPID::loop()
     {
+        while(true)
+        {
+            step();
+            pros::delay(10);
+        }
     }
 
     void
@@ -22,8 +31,12 @@ namespace aekulib
 
     void DifferentialDriveChassisModelPID::step()
     {
+        leftController.step();
+        rightController.step();
+
         left->move(leftController.getOutput());
         right->move(rightController.getOutput());
+
         pros::delay(10);
     }
 }
