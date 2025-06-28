@@ -87,7 +87,7 @@ auto config = std::make_shared<aekulib::ChassisConfiguration>(2.75_in, 10_in, pr
 
 auto kinematics = aekulib::ChassisKinematics(config);
 
-auto controllerGains = aekulib::PIDGains(.17, 0.0, 0.0);
+auto controllerGains = aekulib::PIDGains(.25, 0.0, 0.0);
 
 auto leftController = aekulib::PIDController<revolutions_per_minute<>>(controllerGains),
      rightController = aekulib::PIDController<revolutions_per_minute<>>(controllerGains);
