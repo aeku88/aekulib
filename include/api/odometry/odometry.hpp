@@ -1,23 +1,29 @@
 #pragma once
 #include <cmath>
-namespace aekulib 
+#include <vector>
+namespace aekulib
 {
     class Odometry
     {
 
-    void y_position(double angle, double arcY){
-        double Tr;
+    double x_coord = 0;
+    double y_coord = 0;
 
-        double y_coord = 2 * std::sin(angle / 2) * (((arcY)/angle) + Tr);
 
-    }
 
-    void x_position(double angle, double arcX){
-        double Ts; 
+    void x_position(double angle, double arcX);
+    
+    x_coord = x_coord + x_change;
 
-        double x_coord = 2 * std::sin(angle / 2) * (((arcX)/angle) + Ts);
+    void y_position(double angle, double arcY)
 
-    }
+
+    void update(x_)
+
+    y_coord = y_coord + y_change;
+
+
+    vector<double> position = {x_coord, y_coord};
 
 
     };
