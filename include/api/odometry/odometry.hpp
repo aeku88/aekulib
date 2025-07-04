@@ -6,24 +6,24 @@ namespace aekulib
     class Odometry
     {
 
-    double x_coord = 0;
-    double y_coord = 0;
+    //double x_coord = 0;
+    //double y_coord = 0;
 
 
 
-    void x_position(double angle, double arcX);
-    
-    x_coord = x_coord + x_change;
+    //void x_position(double angle, double arcX);
 
-    void y_position(double angle, double arcY)
+    //x_coord = x_coord + x_change;
 
-
-    void update(x_)
-
-    y_coord = y_coord + y_change;
+    //void y_position(double angle, double arcY)
 
 
-    vector<double> position = {x_coord, y_coord};
+    //void update(x_)
+
+    //y_coord = y_coord + y_change;
+
+
+    //vector<double> position = {x_coord, y_coord};
 
 
     };

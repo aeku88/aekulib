@@ -94,8 +94,7 @@ namespace aekulib
          */
         volts<> getVoltage() const;
 
-        std::shared_ptr<pros::MotorGroup> m_motorGroup;
-
       private:
-    };
+        std::shared_ptr<pros::MotorGroup> m_motorGroup;
+};
 }

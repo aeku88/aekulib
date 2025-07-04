@@ -83,7 +83,7 @@ auto left = std::make_shared<aekulib::MotorGroup>(leftPorts),
      right = std::make_shared<aekulib::MotorGroup>(rightPorts);
 
 // SECOND PARAM IS TRACK WIDTH PLS REMEASURE AND CHANGE ITS WRONG RN
-auto config = std::make_shared<aekulib::ChassisConfiguration>(2.75_in, 10_in, pros::MotorGears::blue, 1.0);
+auto config = std::make_shared<aekulib::ChassisConfiguration>(2.75_in, 10_in, pros::MotorGears::blue, 1.0, 12_lb);
 
 auto kinematics = aekulib::ChassisKinematics(config);
 

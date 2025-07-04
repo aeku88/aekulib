@@ -60,7 +60,8 @@ namespace units
 	 */
 	UNIT_ADD_WITH_METRIC_PREFIXES(angle, radians, rad, conversion_factor<std::ratio<1>, dimension::angle>)
 	UNIT_ADD(angle, degrees, deg, conversion_factor<std::ratio<1, 180>, radians<>, std::ratio<1>>)
-	UNIT_ADD(angle, arcminutes, arcmin, conversion_factor<std::ratio<1, 60>, degrees<>>)
+    UNIT_ADD(angle, centidegrees, centideg, conversion_factor<std::ratio<1, 100>, degrees<>>)
+    UNIT_ADD(angle, arcminutes, arcmin, conversion_factor<std::ratio<1, 60>, degrees<>>)
 	UNIT_ADD(angle, arcseconds, arcsec, conversion_factor<std::ratio<1, 60>, arcminutes<>>)
 	UNIT_ADD(angle, milliarcseconds, mas, milli<arcseconds<>>)
 	UNIT_ADD(angle, turns, tr, conversion_factor<std::ratio<2>, radians<>, std::ratio<1>>)
