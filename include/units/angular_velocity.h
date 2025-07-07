@@ -43,6 +43,7 @@
 
 #pragma once
 
+#include "units/core.h"
 #ifndef units_angular_velocity_h_
 #define units_angular_velocity_h_
 
@@ -51,21 +52,28 @@
 
 namespace units
 {
-	/**
-	 * @namespace	units::angular_velocity
-	 * @brief		namespace for unit types and containers representing angular velocity values
-	 * @details		The SI unit for angular velocity is `radians_per_second`, and the corresponding `dimension`
-	 *				dimension is `angular_velocity_unit`.
-	 * @anchor		angularVelocityContainers
-	 * @sa			See unit for more information on unit type containers.
-	 */
-	UNIT_ADD(angular_velocity, radians_per_second, rad_per_s, conversion_factor<std::ratio<1>, dimension::angular_velocity>)
-	UNIT_ADD(angular_velocity, degrees_per_second, deg_per_s, compound_conversion_factor<degrees_, inverse<seconds_>>)
-	UNIT_ADD(angular_velocity, revolutions_per_minute, rpm, conversion_factor<std::ratio<2, 60>, radians_per_second_, std::ratio<1>>)
-	UNIT_ADD(angular_velocity, revolutions_per_second, rps, conversion_factor<std::ratio<2, 1>, radians_per_second<>, std::ratio<1>>)
-	UNIT_ADD(angular_velocity, milliarcseconds_per_year, mas_per_yr, compound_conversion_factor<milliarcseconds<>, inverse<years<>>>)
+    /**
+     * @namespace	units::angular_velocity
+     * @brief		namespace for unit types and containers representing angular velocity values
+     * @details		The SI unit for angular velocity is `radians_per_second`, and the corresponding
+     *`dimension` dimension is `angular_velocity_unit`.
+     * @anchor		angularVelocityContainers
+     * @sa			See unit for more information on unit type containers.
+     */
+    UNIT_ADD(angular_velocity, radians_per_second, rad_per_s,
+             conversion_factor<std::ratio<1>, dimension::angular_velocity>)
+    UNIT_ADD(angular_velocity, degrees_per_second, deg_per_s,
+             compound_conversion_factor<degrees_, inverse<seconds_>>)
+    UNIT_ADD(angular_velocity, centidegrees_per_second, centideg_per_s,
+             compound_conversion_factor<centidegrees_, inverse<seconds_>>)
+    UNIT_ADD(angular_velocity, revolutions_per_minute, rpm,
+             conversion_factor<std::ratio<2, 60>, radians_per_second_, std::ratio<1>>)
+    UNIT_ADD(angular_velocity, revolutions_per_second, rps,
+             conversion_factor<std::ratio<2, 1>, radians_per_second<>, std::ratio<1>>)
+    UNIT_ADD(angular_velocity, milliarcseconds_per_year, mas_per_yr,
+             compound_conversion_factor<milliarcseconds<>, inverse<years<>>>)
 
-	UNIT_ADD_DIMENSION_TRAIT(angular_velocity)
+    UNIT_ADD_DIMENSION_TRAIT(angular_velocity)
 } // namespace units
 
 #endif // units_angular_velocity_h_
