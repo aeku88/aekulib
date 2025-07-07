@@ -1,30 +1,48 @@
 #pragma once
-#include <cmath>
+//#include <cmath>
+#include <numbers>
 #include <vector>
+#include "units/length.h"
+#include "pros/rtos.hpp"
+#include <pros/rotation.hpp>
+using namespace units;
+using namespace units::literals;
 namespace aekulib
 {
     class Odometry
     {
 
-    double x_coord = 0;
-    double y_coord = 0;
 
+//---------------------------------------------------------
+//                     IMPORTANT
+//---------------------------------------------------------
+//REMEMBER:
+//YOU NEED TO SET CONSTANTS FOR Tl, Tr, Ts, and wheel radius.
+public:
+void update();
 
+private:
+void wheel_distance(inches<>& left_dist, inches<>& right_dist, inches<>& back_dist);
+//distance from center to tracking wheels
+const inches<> Tl = 3_in;
+const inches<> Tr = 3_in;
+const inches<> Ts = 3_in;
 
-    void x_position(double angle, double arcX);
-    
-    x_coord = x_coord + x_change;
+//angle change and radius to calculate distance travelled by wheel
+double wheel_angle_left_previous = 0;
+double wheel_angle_right_previous = 0;
+double wheel_angle_back_previous = 0;
 
-    void y_position(double angle, double arcY)
+//total wheel distances
+inches<> left_dist_total = 0_in;
+inches<> right_dist_total = 0_in;
 
+//global orientation
+double orientation = 0;
 
-    void update(x_)
-
-    y_coord = y_coord + y_change;
-
-
-    vector<double> position = {x_coord, y_coord};
-
+//the global x and y coords
+inches<> x_coord = 0_in;
+inches<> y_coord = 0_in;
 
     };
 }
