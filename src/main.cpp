@@ -83,7 +83,8 @@ auto left = std::make_shared<aekulib::MotorGroup>(leftPorts),
      right = std::make_shared<aekulib::MotorGroup>(rightPorts);
 
 // SECOND PARAM IS TRACK WIDTH PLS REMEASURE AND CHANGE ITS WRONG RN
-auto config = std::make_shared<aekulib::ChassisConfiguration>(2.75_in, 10_in, pros::MotorGears::blue, 1.0, 12_lb);
+auto config
+  = std::make_shared<aekulib::ChassisConfiguration>(2.75_in, 10_in, pros::MotorGears::blue, 1.0, 12_lb);
 
 auto kinematics = aekulib::ChassisKinematics(config);
 
@@ -96,7 +97,7 @@ auto model = aekulib::DifferentialDriveChassisModelPID(left, leftController, rig
 
 void opcontrol()
 {
-    pros::Controller master(pros::E_CONTROLLER_MASTER);
+    /*pros::Controller master(pros::E_CONTROLLER_MASTER);
 
     while(true)
     {
@@ -108,5 +109,7 @@ void opcontrol()
         model.drive(kinematics.inverse({linVel, angVel}));
 
         pros::delay(10);
-    }
+    }*/
+
+    aekulib::motorKt();
 }
