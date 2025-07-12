@@ -5,7 +5,7 @@
 #include "units/length.h"
 #include "units/angle.h"
 #include "pros/rtos.hpp"
-#include <pros/rotation.hpp>
+#include "pros/rotation.hpp"
 #include "Eigen/Core"
 
 using namespace units;
@@ -20,6 +20,8 @@ namespace aekulib
         // REMEMBER:
         // YOU NEED TO SET CONSTANTS FOR Tl, Tr, Ts, and wheel radius.
       public:
+        Odometry();
+
         void update();
 
         Eigen::Vector2<inches<>> getPosition() const;
@@ -43,7 +45,7 @@ namespace aekulib
         inches<> right_dist_total = 0_in;
 
         // global orientation
-        double orientation = 0;
+        radians<> orientation = 0_deg;
 
         // the global x and y coords
         inches<> x_coord = 0_in;

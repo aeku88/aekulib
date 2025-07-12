@@ -2,5 +2,8 @@
 
 namespace aekulib
 {
-    
+    class DifferentialDriveChassisModel()
+    {
+
+    };
 }

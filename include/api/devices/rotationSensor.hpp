@@ -36,6 +36,6 @@ namespace aekulib
         std::int32_t setDataRate(const milliseconds<std::uint8_t> rate);
 
       private:
-        std::shared_ptr<pros::Rotation> m_rotation;
+        std::unique_ptr<pros::Rotation> m_rotation;
     };
 }
