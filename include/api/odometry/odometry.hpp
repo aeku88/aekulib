@@ -5,7 +5,7 @@
 #include "units/length.h"
 #include "units/angle.h"
 #include "pros/rtos.hpp"
-#include "pros/rotation.hpp"
+#include "api/devices/rotationSensor.hpp"
 #include "Eigen/Core"
 
 using namespace units;
@@ -22,30 +22,31 @@ namespace aekulib
       public:
         Odometry();
 
-        void update();
-
         Eigen::Vector2<inches<>> getPosition() const;
 
         degrees<> getOrientation() const;
 
       private:
+        void update();
+
         void wheel_distance(inches<> &left_dist, inches<> &right_dist, inches<> &back_dist);
+
         // distance from center to tracking wheels
         const inches<> Tl = 3_in;
         const inches<> Tr = 3_in;
         const inches<> Ts = 3_in;
 
         // angle change and radius to calculate distance travelled by wheel
-        double wheel_angle_left_previous = 0;
-        double wheel_angle_right_previous = 0;
-        double wheel_angle_back_previous = 0;
+        radians<> wheel_angle_left_previous = 0_rad;
+        radians<> wheel_angle_right_previous = 0_rad;
+        radians<> wheel_angle_back_previous = 0_rad;
 
         // total wheel distances
         inches<> left_dist_total = 0_in;
         inches<> right_dist_total = 0_in;
 
         // global orientation
-        radians<> orientation = 0_deg;
+        radians<> orientation = 0_rad;
 
         // the global x and y coords
         inches<> x_coord = 0_in;

@@ -11,22 +11,26 @@ namespace aekulib
         const inches<> wheel_radius = 3_in;
 
         // Functions to initialize rotation sensors
-        pros::Rotation rotation_sensor_1(1);
-        pros::Rotation rotation_sensor_2(2);
-        pros::Rotation rotation_sensor_3(3);
+        RotationSensor rotation_sensor_1(1);
+        RotationSensor rotation_sensor_2(2);
+        RotationSensor rotation_sensor_3(3);
 
         // The wheel angle currently
-        double wheel_angle_left_after = std::numbers::pi * rotation_sensor_1.get_position() / 18000;
-        double wheel_angle_right_after = std::numbers::pi * rotation_sensor_2.get_position() / 18000;
-        double wheel_angle_back_after = std::numbers::pi * rotation_sensor_3.get_position() / 18000;
+        degrees<> wheel_angle_left_after1 = rotation_sensor_1.getPosition();
+        radians<> wheel_angle_right_after1 = rotation_sensor_2.getPosition();
+        radians<> wheel_angle_back_after1 = rotation_sensor_3.getPosition();
+
+        radians<> wheel_angle_left_after = wheel_angle_left_after1;
+        radians<> wheel_angle_right_after = wheel_angle_left_after1;
+        radians<> wheel_angle_back_after = wheel_angle_left_after1;
 
         // distance travelled by each wheel based on variables above
-        left_dist = wheel_radius * (wheel_angle_left_after - wheel_angle_left_previous);
-        right_dist = wheel_radius * (wheel_angle_right_after - wheel_angle_right_previous);
-        back_dist = wheel_radius * (wheel_angle_back_after - wheel_angle_back_previous);
+        left_dist = wheel_radius * (wheel_angle_left_after - wheel_angle_left_previous).value();
+        right_dist = wheel_radius * (wheel_angle_right_after - wheel_angle_right_previous).value();
+        back_dist = wheel_radius * (wheel_angle_back_after - wheel_angle_back_previous).value();
 
-        left_dist_total = wheel_radius * wheel_angle_left_after;
-        right_dist_total = wheel_radius * wheel_angle_right_after;
+        left_dist_total = wheel_radius * wheel_angle_left_after.value();
+        right_dist_total = wheel_radius * wheel_angle_right_after.value();
 
         // The previous angle is changed to the new angle for the next cycle
         wheel_angle_left_previous = wheel_angle_left_after;
@@ -36,42 +40,42 @@ namespace aekulib
 
     void Odometry::update()
     {
-        /*while(true)
+        while(true)
         {
             inches<> left_distance, right_distance, back_distance;
             wheel_distance(left_distance, right_distance, back_distance);
 
             // calculate new global orientation
-            orientation = (left_dist_total - right_dist_total) / (Tl + Tr);
+            orientation = ((left_dist_total - right_dist_total) / (Tl + Tr)).value() * 1_rad;
 
-            double angle_change = (left_distance - right_distance) / (Tl + Tr);
+            radians<> angle_change = ((left_distance - right_distance) / (Tl + Tr)).value() * 1_rad;
 
             inches<> x_change, y_change;
 
-            x_change = (angle_change == 0)
-                         ? back_distance
-                         : 2 * std::sin(angle_change / 2) * (((back_distance) / angle_change) + Ts);
-            y_change = (angle_change == 0)
-                         ? right_distance
-                         : 2 * std::sin(angle_change / 2) * (((right_distance) / angle_change) + Tr);
+            x_change = (angle_change == 0_rad) ? back_distance
+                                               : 2 * std::sin(angle_change.value() / 2)
+                                                   * (((back_distance) / angle_change.value()) + Ts);
+            y_change = (angle_change == 0_rad) ? right_distance
+                                               : 2 * std::sin(angle_change.value() / 2)
+                                                   * (((right_distance) / angle_change.value()) + Tr);
 
             // The next part is to change local coordinates to global coordinates.
 
             // calculate average orientation
-            double average_orientation = orientation - (angle_change / 2);
+            radians<> average_orientation = orientation - (angle_change / 2);
 
             // convert the local coordinates to polar coordinates
             inches<> radius = units::sqrt(x_change * x_change + y_change * y_change);
-            double angle = std::atan2(y_change.value(), x_change.value());
+            radians<> angle = std::atan2(y_change.value(), x_change.value()) * 1_rad;
 
             // converting polar coordinates back to cartesian coordinates
-            inches<> x_change_correct = radius * std::cos(angle - average_orientation);
-            inches<> y_change_correct = radius * std::sin(angle - average_orientation);
+            inches<> x_change_correct = radius * std::cos(angle.value() - average_orientation.value());
+            inches<> y_change_correct = radius * std::sin(angle.value() - average_orientation.value());
 
             x_coord += x_change_correct;
             y_coord += y_change_correct;
 
             pros::delay(10);
-        }*/
+        }
     }
 }
