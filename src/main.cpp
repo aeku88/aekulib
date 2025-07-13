@@ -111,5 +111,7 @@ void opcontrol()
         pros::delay(10);
     }*/
 
+    std::ofstream outputFile("data.csv");
+
     aekulib::motorKt();
 }

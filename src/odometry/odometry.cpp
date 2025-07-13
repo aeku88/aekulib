@@ -36,7 +36,7 @@ namespace aekulib
 
     void Odometry::update()
     {
-        while(true)
+        /*while(true)
         {
             inches<> left_distance, right_distance, back_distance;
             wheel_distance(left_distance, right_distance, back_distance);
@@ -72,6 +72,6 @@ namespace aekulib
             y_coord += y_change_correct;
 
             pros::delay(10);
-        }
+        }*/
     }
 }

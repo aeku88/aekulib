@@ -13,8 +13,6 @@ namespace aekulib
       public:
         explicit RotationSensor(const std::uint8_t port);
 
-        explicit RotationSensor(const std::uint8_t port, const bool reverse);
-
         std::int32_t reset();
 
         std::int32_t resetPosition();

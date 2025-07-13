@@ -5,11 +5,7 @@
 namespace aekulib
 {
     RotationSensor::RotationSensor(const std::uint8_t port)
-        : m_rotation(std::make_shared<pros::Rotation>(port))
-    {}
-
-    RotationSensor::RotationSensor(const std::uint8_t port, const bool reverse)
-        : m_rotation(std::make_shared<pros::Rotation>(port, reverse))
+        : m_rotation(std::make_unique<pros::Rotation>(port))
     {}
 
     std::int32_t RotationSensor::reset() { return m_rotation->reset(); }

@@ -3,12 +3,15 @@
 namespace aekulib
 {
     Motor::Motor(const std::int8_t port, const pros::v5::MotorGears gearset)
-        : m_motor(std::make_shared<pros::Motor>(port, gearset))
+        : m_motor(std::make_unique<pros::Motor>(port, gearset))
     {
         m_motor->set_encoder_units(pros::MotorEncoderUnits::degrees);
     }
 
-    void Motor::move(const volts<> voltage) const { m_motor->move_voltage(voltage.to<int32_t>()); }
+    void Motor::move(const volts<> voltage) const
+    {
+        m_motor->move_voltage(convert<millivolts<>>(voltage).value());
+    }
 
     void Motor::brake() { m_motor->brake(); }
 
