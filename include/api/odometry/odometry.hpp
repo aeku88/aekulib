@@ -43,11 +43,15 @@ namespace aekulib
 
         void wheel_distance(inches<> &right_dist, inches<> &back_dist);
 
+        radians<> normalizeAngle(radians<> angle);
+
         aekulib::Motor rotation_sensor_right;
         aekulib::RotationSensor rotation_sensor_back;
 
         aekulib::IMU inertial_sensor;
         radians<> inertial_heading_previous;
+
+        inches<> x_change, y_change = 0_in;
 
         // distance from center to tracking wheels
         const inches<> Tr;
@@ -67,8 +71,8 @@ namespace aekulib
         radians<> orientation;
 
         // the global x and y coords
-        inches<> x_coord;
-        inches<> y_coord;
+        inches<> x_coord = 0_in;
+        inches<> y_coord = 0_in;
 
         // x and y change
         inches<> x_change_correct = 0_in;
