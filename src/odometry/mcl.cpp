@@ -5,7 +5,7 @@
 namespace aekulib
 {
 
-    mcl::mcl(const std::shared_ptr<Odometry> &iodometry, std::uint8_t distance_sensor_port)
+    mcl::mcl(const std::shared_ptr<Odometry> iodometry, std::uint8_t distance_sensor_port)
         : odometry(iodometry), numParticles(100), // Initialize numParticles (you can change this value)
           particles(numParticles), // Initialize vector with numParticles default-constructed elements
           generator(std::chrono::system_clock::now().time_since_epoch().count()), // Seed random generator

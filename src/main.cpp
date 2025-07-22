@@ -112,23 +112,20 @@ void opcontrol()
         pros::delay(10);
     }*/
 
-    auto odometry = std::make_shared<aekulib::Odometry>(1, 2, 3, 0_in, 0_in, 2.75_in, 3, 3, M_PI / 2);
+    auto odometry = std::make_shared<aekulib::Odometry>(12, 4, 16, 0_in, 0_in, 2.75_in, 5.625_in, 0_in,
+                                                        radians<>(M_PI / 2));
 
-    aekulib::mcl localization(odometry, 4);
+    // aekulib::mcl localization(odometry, 4);
 
     while(true)
     {
         // Get estimated position from MCL
-        Eigen::Vector2<inches<>> estimated_pos = localization.getEstimatedPosition();
-        radians<> estimated_angle = localization.getEstimatedOrientation();
+        Eigen::Vector2<inches<>> estimated_pos = odometry->getPosition();
+        radians<> estimated_angle = odometry->getOrientation();
 
-        std::cout << estimated_pos;
-        std::cout << estimated_angle;
+        std::cout << estimated_pos[0] << ", " << estimated_pos[1] << '\n';
+        std::cout << estimated_angle << '\n';
 
         pros::delay(10);
     }
-
-    std::ofstream outputFile("data.csv");
-
-    aekulib::motorKt();
 }

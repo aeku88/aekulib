@@ -7,8 +7,8 @@
 #include "pros/rtos.hpp"
 #include "api/devices/rotationSensor.hpp"
 #include "api/devices/imu.hpp"
+#include "api/devices/motor.hpp"
 #include "Eigen/Core"
-
 using namespace units;
 using namespace units::literals;
 namespace aekulib
@@ -43,7 +43,7 @@ namespace aekulib
 
         void wheel_distance(inches<> &right_dist, inches<> &back_dist);
 
-        aekulib::RotationSensor rotation_sensor_right;
+        aekulib::Motor rotation_sensor_right;
         aekulib::RotationSensor rotation_sensor_back;
 
         aekulib::IMU inertial_sensor;

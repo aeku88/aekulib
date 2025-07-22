@@ -31,7 +31,7 @@ namespace aekulib
         Eigen::Vector2<inches<>> getEstimatedPosition() const;
         radians<> getEstimatedOrientation() const;
 
-        explicit mcl(const std::shared_ptr<Odometry> &iodometry, std::uint8_t distance_sensor_port);
+        explicit mcl(const std::shared_ptr<Odometry> iodometry, std::uint8_t distance_sensor_port);
 
       private:
         void initialize();

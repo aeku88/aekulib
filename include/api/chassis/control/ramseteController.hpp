@@ -1,6 +1,6 @@
 #pragma once
 
-#include "odometry/odometry.hpp"
+#include "api/odometry/odometry.hpp"
 #include "units/length.h"
 #include "units/angle.h"
 #include "units/velocity.h"
