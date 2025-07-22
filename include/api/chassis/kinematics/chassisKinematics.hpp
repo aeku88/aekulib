@@ -3,6 +3,7 @@
 #include "api/chassis/chassisConfiguration.hpp"
 
 #include "Eigen/Eigen"
+#include "api/chassis/kinematics/chassisKinematics.hpp"
 #include "units/angular_velocity.h"
 #include "units/velocity.h"
 

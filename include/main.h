@@ -40,8 +40,6 @@
  * You should add more #includes here
  */
 #include "api/api.hpp"
-#include "api/test/motorTest.hpp"
-
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
  * Motor, you can use the namespace with the following commented out line.
@@ -53,6 +51,7 @@
 // using namespace pros;
 // using namespace pros::literals;
 // using namespace okapi;
+using namespace aekulib;
 
 /**
  * Prototypes for the competition control tasks are redefined here to ensure

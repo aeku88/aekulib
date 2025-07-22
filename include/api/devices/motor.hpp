@@ -26,6 +26,8 @@ namespace aekulib
 
         void move(const volts<> voltage) const;
 
+        void move(const revolutions_per_minute<> omega) const;
+
         /** Stops the motor according to brake mode. */
         void brake();
 

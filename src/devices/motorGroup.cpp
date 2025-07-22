@@ -21,7 +21,7 @@ namespace aekulib
 
     void MotorGroup::move(const revolutions_per_minute<> omega) const
     {
-        move(getCurrentDraw() * 3.84_Ohm + omega / (6.68 * rpm / V));
+        m_motorGroup->move_velocity(omega.value());
     }
 
     void MotorGroup::brake() { m_motorGroup->brake(); }
