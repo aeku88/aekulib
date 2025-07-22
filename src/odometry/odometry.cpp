@@ -14,17 +14,17 @@ namespace aekulib
 
     Odometry::Odometry(uint8_t right_rotation_port, uint8_t back_rotation_port, uint8_t imu_port,
                        inches<> initial_x, inches<> initial_y, inches<> wheel_radius, inches<> tr,
-                       inches<> ts)
+                       inches<> ts, radians<> dir)
         : rotation_sensor_right(right_rotation_port), rotation_sensor_back(back_rotation_port),
           inertial_sensor(imu_port), Tr(tr), Ts(ts), wheel_radius(wheel_radius), x_coord(initial_x),
-          y_coord(initial_y), update_task([this]() { this->update(); })
+          y_coord(initial_y), dir_initial(dir), update_task([this]() { this->update(); })
     {
         while(inertial_sensor.isCalibrating())
         {
             pros::delay(10);
         }
 
-        inertial_heading_previous = radians(M_PI / 2);
+        inertial_heading_previous = radians(dir_initial);
 
         // Reset rotation sensors
         rotation_sensor_right.resetPosition();
@@ -47,8 +47,6 @@ namespace aekulib
         right_dist = wheel_radius * (wheel_angle_right_after - wheel_angle_right_previous).value();
         back_dist = wheel_radius * (wheel_angle_back_after - wheel_angle_back_previous).value();
 
-        right_dist_total = wheel_radius * wheel_angle_right_after.value();
-
         // The previous angle is changed to the new angle for the next cycle
         wheel_angle_right_previous = wheel_angle_right_after;
         wheel_angle_back_previous = wheel_angle_back_after;
@@ -58,19 +56,17 @@ namespace aekulib
     {
         while(true)
         {
-            radians<> current_inertial_heading = radians(M_PI / 2) - inertial_sensor.getRotation();
+            radians<> current_inertial_heading = radians(dir_initial) - inertial_sensor.getRotation();
 
             radians<> orientationIMUBefore = inertial_heading_previous;
 
-            degrees<> angleChange = current_inertial_heading - orientationIMUBefore;
+            angle_change = current_inertial_heading - orientationIMUBefore;
 
             inches<> right_distance, back_distance;
             wheel_distance(right_distance, back_distance);
 
             // calculate new global orientation
             orientation = radians(current_inertial_heading);
-
-            radians<> angle_change = angleChange;
 
             inches<> x_change, y_change;
 
@@ -91,8 +87,8 @@ namespace aekulib
             radians<> angle = std::atan2(y_change.value(), x_change.value()) * 1_rad;
 
             // converting polar coordinates back to cartesian coordinates
-            inches<> x_change_correct = radius * std::cos(angle.value() + average_orientation.value());
-            inches<> y_change_correct = radius * std::sin(angle.value() + average_orientation.value());
+            x_change_correct = radius * std::cos(angle.value() + average_orientation.value());
+            y_change_correct = radius * std::sin(angle.value() + average_orientation.value());
 
             x_coord += x_change_correct;
             y_coord += y_change_correct;

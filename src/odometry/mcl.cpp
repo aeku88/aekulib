@@ -56,7 +56,7 @@ namespace aekulib
             particles[i].positionY
               = std::clamp(particles[i].positionY, -BOX_HALF_SIZE * 1_in, BOX_HALF_SIZE * 1_in);
 
-            normalizeAngle(particles[i].direction);
+            particles[i].direction = normalizeAngle(particles[i].direction);
         }
     }
 
@@ -68,7 +68,7 @@ namespace aekulib
             double expectedSensorReading
               = expectedDistance(particles[i].positionX, particles[i].positionY, particles[i].direction);
 
-            const double SENSOR_NOISE_STD_DEV_INCHES = double(actualSensorReading) * 0.05;
+            const double SENSOR_NOISE_STD_DEV_INCHES = 2.0;
             double diff = (actualSensorReading - inches(expectedSensorReading)).value();
 
             particles[i].weight

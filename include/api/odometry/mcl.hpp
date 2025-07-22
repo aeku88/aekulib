@@ -1,5 +1,5 @@
 #pragma once
-// #include <cmath>
+#include <cmath>
 #include <numbers>
 #include <vector>
 #include "units/length.h"
@@ -27,11 +27,6 @@ namespace aekulib
 
     class mcl
     {
-        // NOTES
-        // Find the actual sensor reading
-        // Find deviation for sensor
-        //
-
       public:
         Eigen::Vector2<inches<>> getEstimatedPosition() const;
         radians<> getEstimatedOrientation() const;
@@ -54,7 +49,7 @@ namespace aekulib
 
         // arrays for particles
         std::vector<Particle> particles;
-        int numParticles = 100;
+        int numParticles = 50;
 
         double expectedDistance(inches<> pX, inches<> pY, radians<> pDirection);
 

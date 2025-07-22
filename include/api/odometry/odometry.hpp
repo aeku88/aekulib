@@ -23,8 +23,8 @@ namespace aekulib
         // ALSO PUT CORRECT X AND Y INITIAL COORDINATES
       public:
         Odometry(uint8_t right_rotation_port, uint8_t back_rotation_port, uint8_t imu_port,
-                 inches<> initial_x = 0_in, inches<> initial_y = 0_in, inches<> wheel_radius = 2.75_in,
-                 inches<> tr = 3_in, inches<> ts = 3_in);
+                 inches<> initial_x, inches<> initial_y, inches<> wheel_radius, inches<> tr, inches<> ts,
+                 radians<> dir);
 
         Eigen::Vector2<inches<>> getPosition() const;
 
@@ -39,14 +39,14 @@ namespace aekulib
       private:
         void update();
 
+        radians<> angle_change;
+
         void wheel_distance(inches<> &right_dist, inches<> &back_dist);
 
         aekulib::RotationSensor rotation_sensor_right;
         aekulib::RotationSensor rotation_sensor_back;
 
         aekulib::IMU inertial_sensor;
-        // radians<> orientationIMUAfter;
-        // radians<> orientationIMUBefore = M_PI / 2 * 1_rad;
         radians<> inertial_heading_previous;
 
         // distance from center to tracking wheels
@@ -61,9 +61,10 @@ namespace aekulib
         // total wheel distances
         inches<> right_dist_total = 0_in;
 
+        radians<> dir_initial;
+
         // global orientation
-        radians<> orientation = 1_rad * M_PI / 2;
-        radians<> angle_change = 0_rad;
+        radians<> orientation;
 
         // the global x and y coords
         inches<> x_coord;

@@ -1,6 +1,7 @@
 #include "main.h"
 #include "pros/misc.h"
 #include "units/velocity.h"
+#include "api/odometry/mcl.hpp"
 
 /**
  * A callback function for LLEMU's center button.
@@ -110,6 +111,22 @@ void opcontrol()
 
         pros::delay(10);
     }*/
+
+    auto odometry = std::make_shared<aekulib::Odometry>(1, 2, 3, 0_in, 0_in, 2.75_in, 3, 3, M_PI / 2);
+
+    aekulib::mcl localization(odometry, 4);
+
+    while(true)
+    {
+        // Get estimated position from MCL
+        Eigen::Vector2<inches<>> estimated_pos = localization.getEstimatedPosition();
+        radians<> estimated_angle = localization.getEstimatedOrientation();
+
+        std::cout << estimated_pos;
+        std::cout << estimated_angle;
+
+        pros::delay(10);
+    }
 
     std::ofstream outputFile("data.csv");
 
