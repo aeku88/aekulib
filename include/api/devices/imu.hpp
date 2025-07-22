@@ -2,7 +2,7 @@
 
 #include "pros/imu.hpp"
 
-#include "Eigen/Eigen"
+#include "Eigen/Core"
 #include "units/acceleration.h"
 #include "units/angle.h"
 
