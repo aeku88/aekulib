@@ -1,11 +1,12 @@
 #pragma once
-// #include <cmath>
+#include <cmath>
 #include <numbers>
 #include <vector>
 #include "units/length.h"
 #include "units/angle.h"
 #include "pros/rtos.hpp"
 #include "api/devices/rotationSensor.hpp"
+#include "api/devices/imu.hpp"
 #include "Eigen/Core"
 
 using namespace units;
@@ -19,37 +20,59 @@ namespace aekulib
         //---------------------------------------------------------
         // REMEMBER:
         // YOU NEED TO SET CONSTANTS FOR Tl, Tr, Ts, and wheel radius.
+        // ALSO PUT CORRECT X AND Y INITIAL COORDINATES
       public:
-        Odometry();
+        Odometry(uint8_t right_rotation_port, uint8_t back_rotation_port, uint8_t imu_port,
+                 inches<> initial_x = 0_in, inches<> initial_y = 0_in, inches<> wheel_radius = 2.75_in,
+                 inches<> tr = 3_in, inches<> ts = 3_in);
 
         Eigen::Vector2<inches<>> getPosition() const;
 
+        inches<> getPositionChangeX() const;
+
+        inches<> getPositionChangeY() const;
+
         degrees<> getOrientation() const;
+
+        degrees<> getOrientationChange() const;
 
       private:
         void update();
 
-        void wheel_distance(inches<> &left_dist, inches<> &right_dist, inches<> &back_dist);
+        void wheel_distance(inches<> &right_dist, inches<> &back_dist);
+
+        aekulib::RotationSensor rotation_sensor_right;
+        aekulib::RotationSensor rotation_sensor_back;
+
+        aekulib::IMU inertial_sensor;
+        // radians<> orientationIMUAfter;
+        // radians<> orientationIMUBefore = M_PI / 2 * 1_rad;
+        radians<> inertial_heading_previous = 0_rad;
 
         // distance from center to tracking wheels
-        const inches<> Tl = 3_in;
-        const inches<> Tr = 3_in;
-        const inches<> Ts = 3_in;
+        const inches<> Tr;
+        const inches<> Ts;
+        const inches<> wheel_radius;
 
         // angle change and radius to calculate distance travelled by wheel
-        radians<> wheel_angle_left_previous = 0_rad;
         radians<> wheel_angle_right_previous = 0_rad;
         radians<> wheel_angle_back_previous = 0_rad;
 
         // total wheel distances
-        inches<> left_dist_total = 0_in;
         inches<> right_dist_total = 0_in;
 
         // global orientation
-        radians<> orientation = 0_rad;
+        radians<> orientation = 1_rad * M_PI / 2;
+        radians<> angle_change = 0_rad;
 
         // the global x and y coords
-        inches<> x_coord = 0_in;
-        inches<> y_coord = 0_in;
+        inches<> x_coord;
+        inches<> y_coord;
+
+        // x and y change
+        inches<> x_change_correct = 0_in;
+        inches<> y_change_correct = 0_in;
+
+        pros::Task update_task;
     };
 }
