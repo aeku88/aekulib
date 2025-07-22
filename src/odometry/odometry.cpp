@@ -8,9 +8,9 @@ namespace aekulib
 
     inches<> Odometry::getPositionChangeY() const { return y_change_correct; }
 
-    degrees<> Odometry::getOrientation() const { return orientation; }
+    radians<> Odometry::getOrientation() const { return orientation; }
 
-    degrees<> Odometry::getOrientationChange() const { return angle_change; }
+    radians<> Odometry::getOrientationChange() const { return angle_change; }
 
     Odometry::Odometry(uint8_t right_rotation_port, uint8_t back_rotation_port, uint8_t imu_port,
                        inches<> initial_x, inches<> initial_y, inches<> wheel_radius, inches<> tr,
@@ -58,11 +58,11 @@ namespace aekulib
     {
         while(true)
         {
-            radians<> current_inertial_heading = inertial_sensor.getRotation();
+            radians<> current_inertial_heading = radians(M_PI / 2) - inertial_sensor.getRotation();
 
             radians<> orientationIMUBefore = inertial_heading_previous;
 
-            degrees<> angleChange = 0_deg - current_inertial_heading - orientationIMUBefore;
+            degrees<> angleChange = current_inertial_heading - orientationIMUBefore;
 
             inches<> right_distance, back_distance;
             wheel_distance(right_distance, back_distance);

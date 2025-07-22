@@ -32,9 +32,9 @@ namespace aekulib
 
         inches<> getPositionChangeY() const;
 
-        degrees<> getOrientation() const;
+        radians<> getOrientation() const;
 
-        degrees<> getOrientationChange() const;
+        radians<> getOrientationChange() const;
 
       private:
         void update();
@@ -47,7 +47,7 @@ namespace aekulib
         aekulib::IMU inertial_sensor;
         // radians<> orientationIMUAfter;
         // radians<> orientationIMUBefore = M_PI / 2 * 1_rad;
-        radians<> inertial_heading_previous = 0_rad;
+        radians<> inertial_heading_previous;
 
         // distance from center to tracking wheels
         const inches<> Tr;

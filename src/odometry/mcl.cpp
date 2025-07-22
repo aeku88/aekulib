@@ -50,14 +50,12 @@ namespace aekulib
             particles[i].direction
               += odometry->getOrientationChange() + degrees(dir_noise_dist_deg(generator));
 
-            // Try to find a better way for particles that go outside the box
             const double BOX_HALF_SIZE = 72.0;
             particles[i].positionX
               = std::clamp(particles[i].positionX, -BOX_HALF_SIZE * 1_in, BOX_HALF_SIZE * 1_in);
             particles[i].positionY
               = std::clamp(particles[i].positionY, -BOX_HALF_SIZE * 1_in, BOX_HALF_SIZE * 1_in);
 
-            // Also normalize angle between -pi and pi
             normalizeAngle(particles[i].direction);
         }
     }
@@ -70,8 +68,7 @@ namespace aekulib
             double expectedSensorReading
               = expectedDistance(particles[i].positionX, particles[i].positionY, particles[i].direction);
 
-            // Remember to tune this
-            const double SENSOR_NOISE_STD_DEV_INCHES = 5.0;
+            const double SENSOR_NOISE_STD_DEV_INCHES = double(actualSensorReading) * 0.05;
             double diff = (actualSensorReading - inches(expectedSensorReading)).value();
 
             particles[i].weight
@@ -126,8 +123,6 @@ namespace aekulib
 
     double mcl::expectedDistance(inches<> pX, inches<> pY, radians<> pDirection)
     {
-        // Distance sensor(1);
-
         const double X_MIN = -72.0;
         const double X_MAX = 72.0;
         const double Y_MIN = -72.0;
