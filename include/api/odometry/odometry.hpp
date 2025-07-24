@@ -36,9 +36,13 @@ namespace aekulib
 
         radians<> getOrientationChange() const;
 
-      private:
+        inches<> getPositionCX() const;
+
+        inches<> getPositionCY() const;
+
         void update();
 
+      private:
         radians<> angle_change;
 
         void wheel_distance(inches<> &right_dist, inches<> &back_dist);
@@ -50,6 +54,7 @@ namespace aekulib
 
         aekulib::IMU inertial_sensor;
         radians<> inertial_heading_previous;
+        radians<> current_inertial_heading;
 
         inches<> x_change, y_change = 0_in;
 
@@ -62,17 +67,14 @@ namespace aekulib
         radians<> wheel_angle_right_previous = 0_rad;
         radians<> wheel_angle_back_previous = 0_rad;
 
-        // total wheel distances
-        inches<> right_dist_total = 0_in;
-
         radians<> dir_initial;
 
         // global orientation
         radians<> orientation;
 
         // the global x and y coords
-        inches<> x_coord = 0_in;
-        inches<> y_coord = 0_in;
+        inches<> x_coord;
+        inches<> y_coord;
 
         // x and y change
         inches<> x_change_correct = 0_in;

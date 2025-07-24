@@ -2,6 +2,7 @@
 #include "pros/misc.h"
 #include "units/velocity.h"
 #include "api/odometry/mcl.hpp"
+#include "api/devices/rotationSensor.hpp"
 
 /**
  * A callback function for LLEMU's center button.
@@ -113,7 +114,7 @@ void opcontrol()
     }*/
 
     auto odometry = std::make_shared<aekulib::Odometry>(12, 4, 16, 0_in, 0_in, 2.75_in, 5.625_in, 0_in,
-                                                        radians<>(M_PI / 2));
+                                                        radians(M_PI / 2));
 
     // aekulib::mcl localization(odometry, 4);
 
@@ -122,10 +123,24 @@ void opcontrol()
         // Get estimated position from MCL
         Eigen::Vector2<inches<>> estimated_pos = odometry->getPosition();
         radians<> estimated_angle = odometry->getOrientation();
+        inches<> xchange = odometry->getPositionChangeX();
+        inches<> ychange = odometry->getPositionChangeY();
+        inches<> xc = odometry->getPositionCX();
+        inches<> yc = odometry->getPositionCY();
 
-        std::cout << estimated_pos[0] << ", " << estimated_pos[1] << '\n';
-        std::cout << estimated_angle << '\n';
+        std::cout << "x, y coord: " << estimated_pos[0] << ", " << estimated_pos[1] << '\n';
+        std::cout << "orientation" << estimated_angle << '\n';
+        std::cout << " x and y change: " << xchange << ", " << ychange << "\n";
+        std::cout << xc << ", " << yc << "\n";
+        std::cout << " \n";
 
         pros::delay(10);
     }
+
+    /*aekulib::MotorGroup motors({-3, 2});
+    while(true)
+    {
+        motors.move(600_rpm);
+        pros::delay(10);
+    }*/
 }
