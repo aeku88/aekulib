@@ -13,6 +13,8 @@ namespace aekulib
         m_motor->move_voltage(convert<millivolts<>>(voltage).value());
     }
 
+    void Motor::move(const revolutions_per_minute<> omega) const { m_motor->move_velocity(omega.value()); }
+
     void Motor::brake() { m_motor->brake(); }
 
     void Motor::setBrakeMode(const pros::MotorBrake mode) const { m_motor->set_brake_mode(mode); }
