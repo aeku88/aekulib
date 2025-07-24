@@ -36,18 +36,27 @@ namespace aekulib
 
         radians<> getOrientationChange() const;
 
-      private:
+        inches<> getPositionCX() const;
+
+        inches<> getPositionCY() const;
+
         void update();
 
+      private:
         radians<> angle_change;
 
         void wheel_distance(inches<> &right_dist, inches<> &back_dist);
+
+        radians<> normalizeAngle(radians<> angle);
 
         aekulib::Motor rotation_sensor_right;
         aekulib::RotationSensor rotation_sensor_back;
 
         aekulib::IMU inertial_sensor;
         radians<> inertial_heading_previous;
+        radians<> current_inertial_heading;
+
+        inches<> x_change, y_change = 0_in;
 
         // distance from center to tracking wheels
         const inches<> Tr;
@@ -57,9 +66,6 @@ namespace aekulib
         // angle change and radius to calculate distance travelled by wheel
         radians<> wheel_angle_right_previous = 0_rad;
         radians<> wheel_angle_back_previous = 0_rad;
-
-        // total wheel distances
-        inches<> right_dist_total = 0_in;
 
         radians<> dir_initial;
 
