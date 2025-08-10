@@ -84,19 +84,6 @@ std::vector<int8_t> leftPorts = {1, 11}, rightPorts = {-10, -18};
 auto left = std::make_shared<aekulib::MotorGroup>(leftPorts),
      right = std::make_shared<aekulib::MotorGroup>(rightPorts);
 
-// SECOND PARAM IS TRACK WIDTH PLS REMEASURE AND CHANGE ITS WRONG RN
-auto config
-  = std::make_shared<aekulib::ChassisConfiguration>(2.75_in, 10_in, pros::MotorGears::blue, 1.0, 12_lb);
-
-auto kinematics = aekulib::ChassisKinematics(config);
-
-auto controllerGains = aekulib::PIDGains(.25, 0.0, 0.0);
-
-auto leftController = aekulib::PIDController<revolutions_per_minute<>>(controllerGains),
-     rightController = aekulib::PIDController<revolutions_per_minute<>>(controllerGains);
-
-auto model = aekulib::DifferentialDriveChassisModelPID(left, leftController, right, rightController);
-
 void opcontrol()
 {
     /*pros::Controller master(pros::E_CONTROLLER_MASTER);
@@ -113,34 +100,12 @@ void opcontrol()
         pros::delay(10);
     }*/
 
-    auto odometry = std::make_shared<aekulib::Odometry>(12, 4, 16, 0_in, 0_in, 2.75_in, 5.625_in, 0_in,
-                                                        radians(M_PI / 2));
-
     // aekulib::mcl localization(odometry, 4);
 
+    aekulib::MotorGroup motors({-3, -2});
     while(true)
     {
-        // Get estimated position from MCL
-        Eigen::Vector2<inches<>> estimated_pos = odometry->getPosition();
-        radians<> estimated_angle = odometry->getOrientation();
-        inches<> xchange = odometry->getPositionChangeX();
-        inches<> ychange = odometry->getPositionChangeY();
-        inches<> xc = odometry->getPositionCX();
-        inches<> yc = odometry->getPositionCY();
-
-        std::cout << "x, y coord: " << estimated_pos[0] << ", " << estimated_pos[1] << '\n';
-        std::cout << "orientation" << estimated_angle << '\n';
-        std::cout << " x and y change: " << xchange << ", " << ychange << "\n";
-        std::cout << xc << ", " << yc << "\n";
-        std::cout << " \n";
-
+        motors.move(-600_rpm);
         pros::delay(10);
     }
-
-    /*aekulib::MotorGroup motors({-3, 2});
-    while(true)
-    {
-        motors.move(600_rpm);
-        pros::delay(10);
-    }*/
 }

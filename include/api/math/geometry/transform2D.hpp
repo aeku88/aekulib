@@ -11,7 +11,6 @@
 
 namespace aekulib
 {
-
     class Pose2D;
 
     /**

@@ -2,6 +2,7 @@
 
 #include "api/devices/rotationSensor.hpp"
 #include "api/devices/imu.hpp"
+#include "api/math/geometry/rotation2D.hpp"
 #include "pros/abstract_motor.hpp"
 
 #include "units/angular_velocity.h"
@@ -15,23 +16,6 @@ using namespace units::literals;
 
 namespace aekulib
 {
-    struct ChassisSensors
-    {
-      public:
-        ChassisSensors(const std::shared_ptr<RotationSensor> ileft,
-                       const std::shared_ptr<RotationSensor> iright,
-                       const std::shared_ptr<RotationSensor> imiddle, const std::shared_ptr<IMU> iimu)
-            : left(ileft), right(iright), middle(imiddle), imu(iimu)
-        {}
-
-        Eigen::Vector2<inches<>> getEncoderVals() const;
-        degrees<> getOrientation() const;
-
-      private:
-        std::shared_ptr<RotationSensor> left = nullptr, right = nullptr, middle = nullptr;
-        std::shared_ptr<IMU> imu = nullptr;
-    };
-
     class ChassisConfiguration
     {
       public:
@@ -67,5 +51,28 @@ namespace aekulib
         pros::MotorGears gearset;
         kilograms<> mass;
         double gearRatio;
+    };
+
+    struct ChassisSensors
+    {
+      public:
+        ChassisSensors(const std::shared_ptr<RotationSensor> ileft,
+                       const std::shared_ptr<RotationSensor> iright,
+                       const std::shared_ptr<RotationSensor> imiddle, const std::shared_ptr<IMU> iimu,
+                       const std::shared_ptr<ChassisConfiguration> iconfig)
+            : left(ileft), right(iright), middle(imiddle), imu(iimu), config(iconfig)
+        {}
+
+        Eigen::Vector2<inches<>> getEncoderVals() const
+        {
+            return {left->getPosition() * config->getWheelDiameter() * M_PI / 1_rad,
+                    right->getPosition() * config->getWheelDiameter() * M_PI / 1_rad};
+        }
+        Rotation2D getOrientation() const;
+
+      private:
+        std::shared_ptr<RotationSensor> left = nullptr, right = nullptr, middle = nullptr;
+        std::shared_ptr<IMU> imu = nullptr;
+        std::shared_ptr<ChassisConfiguration> config = nullptr;
     };
 }

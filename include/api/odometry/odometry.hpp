@@ -1,85 +1,38 @@
 #pragma once
-#include <cmath>
-#include <numbers>
-#include <vector>
-#include "units/length.h"
-#include "units/angle.h"
-#include "pros/rtos.hpp"
-#include "api/devices/rotationSensor.hpp"
-#include "api/devices/imu.hpp"
-#include "api/devices/motor.hpp"
-#include "Eigen/Core"
+
+#include "api/chassis/chassisConfiguration.hpp"
+#include "api/chassis/kinematics/chassisKinematics.hpp"
+#include "api/math/geometry/pose2D.hpp"
+#include "api/math/geometry/rotation2D.hpp"
+
 using namespace units;
 using namespace units::literals;
+
 namespace aekulib
 {
+    /*
+     * Implements pose exponential odometry from
+     * https://file.tavsys.net/control/controls-engineering-in-frc.pdf
+     */
     class Odometry
     {
-        //---------------------------------------------------------
-        //                     IMPORTANT
-        //---------------------------------------------------------
-        // REMEMBER:
-        // YOU NEED TO SET CONSTANTS FOR Tl, Tr, Ts, and wheel radius.
-        // ALSO PUT CORRECT X AND Y INITIAL COORDINATES
       public:
-        Odometry(uint8_t right_rotation_port, uint8_t back_rotation_port, uint8_t imu_port,
-                 inches<> initial_x, inches<> initial_y, inches<> wheel_radius, inches<> tr, inches<> ts,
-                 radians<> dir);
+        Odometry(const std::shared_ptr<ChassisSensors> &isensors,
+                 const std::shared_ptr<ChassisKinematics> &ikinematics);
 
-        Eigen::Vector2<inches<>> getPosition() const;
+        Pose2D update();
 
-        inches<> getPositionChangeX() const;
-
-        inches<> getPositionChangeY() const;
-
-        radians<> getOrientation() const;
-
-        radians<> getOrientationChange() const;
-
-        inches<> getPositionCX() const;
-
-        inches<> getPositionCY() const;
-
-        void update();
+        inline Pose2D getPose() const { return pose; }
 
       private:
-        radians<> angle_change;
+        std::shared_ptr<ChassisSensors> sensors = nullptr;
 
-        void wheel_distance(inches<> &right_dist, inches<> &back_dist);
+        std::shared_ptr<ChassisKinematics> kinematics = nullptr;
 
-        radians<> normalizeAngle(radians<> angle);
+        Eigen::Vector2<inches<>> lastSensorVals = {0, 0};
 
-        aekulib::Motor rotation_sensor_right;
-        aekulib::RotationSensor rotation_sensor_back;
+        Rotation2D lastOrientation = {0_rad};
 
-        aekulib::IMU inertial_sensor;
-        radians<> inertial_heading_previous;
-        radians<> current_inertial_heading;
-
-        inches<> x_change, y_change = 0_in;
-
-        // distance from center to tracking wheels
-        const inches<> Tr;
-        const inches<> Ts;
-        const inches<> wheel_radius;
-
-        // angle change and radius to calculate distance travelled by wheel
-        radians<> wheel_angle_right_previous = 0_rad;
-        radians<> wheel_angle_back_previous = 0_rad;
-
-        radians<> dir_initial;
-
-        // global orientation
-        radians<> orientation;
-
-        // the global x and y coords
-        inches<> x_coord;
-        inches<> y_coord;
-
-        // x and y change
-        inches<> x_change_correct = 0_in;
-        inches<> y_change_correct = 0_in;
-
-        pros::Task update_task;
+        Pose2D pose;
     };
 }
