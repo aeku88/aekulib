@@ -47,7 +47,7 @@ namespace aekulib
 
         // ϕ = eᴹᵀ = [A_d  B_d]
         //           [ 0    I ]
-        Eigen::Matrix<double, States + Inputs, States + Inputs> phi = (M * dt.value()).exp();
+        auto phi = (M * dt.value()); // DONT FORGET TO USE MATRIX EXPONENTIAL AFTER REIMPORTING EIGEN
 
         *discA = phi.template block<States, States>(0, 0);
         *discB = phi.template block<States, Inputs>(0, States);

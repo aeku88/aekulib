@@ -84,28 +84,4 @@ std::vector<int8_t> leftPorts = {1, 11}, rightPorts = {-10, -18};
 auto left = std::make_shared<aekulib::MotorGroup>(leftPorts),
      right = std::make_shared<aekulib::MotorGroup>(rightPorts);
 
-void opcontrol()
-{
-    /*pros::Controller master(pros::E_CONTROLLER_MASTER);
-
-    while(true)
-    {
-        inches_per_second<> linVel
-          = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) / 127.0 * 86.39 * ips;
-        radians_per_second<> angVel
-          = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X) / 127.0 * 17.278 * rps;
-
-        model.drive(kinematics.inverse({linVel, angVel}));
-
-        pros::delay(10);
-    }*/
-
-    // aekulib::mcl localization(odometry, 4);
-
-    aekulib::MotorGroup motors({-3, -2});
-    while(true)
-    {
-        motors.move(-600_rpm);
-        pros::delay(10);
-    }
-}
+void opcontrol() {}

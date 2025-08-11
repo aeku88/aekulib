@@ -43,13 +43,13 @@ namespace aekulib
     {
         for(int i = 0; i < numParticles; i++)
         {
-            particles[i].positionX
-              += odometry->getPositionChangeX() + millimeters(pos_noise_dist_mm(generator));
+            /*particles[i].positionX
+              += odometry->getPositionCX() + millimeters(pos_noise_dist_mm(generator));
             particles[i].positionY
-              += odometry->getPositionChangeY() + millimeters(pos_noise_dist_mm(generator));
+              += odometry->getPositionCY() + millimeters(pos_noise_dist_mm(generator));
             particles[i].direction
               += odometry->getOrientationChange() + degrees(dir_noise_dist_deg(generator));
-
+			*/
             const double BOX_HALF_SIZE = 72.0;
             particles[i].positionX
               = std::clamp(particles[i].positionX, -BOX_HALF_SIZE * 1_in, BOX_HALF_SIZE * 1_in);
