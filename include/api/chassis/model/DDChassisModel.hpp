@@ -3,7 +3,7 @@
 #include "api/chassis/chassisConfiguration.hpp"
 #include "api/devices/motorGroup.hpp"
 
-#include "Eigen/Eigen"
+#include "Eigen/Core"
 #include "units/angular_velocity.h"
 #include "units/mass.h"
 

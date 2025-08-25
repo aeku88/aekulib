@@ -6,11 +6,13 @@ namespace aekulib
         : m_motor(std::make_unique<pros::Motor>(port, gearset))
     {
         m_motor->set_encoder_units(pros::MotorEncoderUnits::degrees);
+        this->resetPosition();
     }
 
     void Motor::move(const volts<> voltage) const
     {
         m_motor->move_voltage(convert<millivolts<>>(voltage).value());
+        this->resetPosition();
     }
 
     void Motor::move(const revolutions_per_minute<> omega) const { m_motor->move_velocity(omega.value()); }

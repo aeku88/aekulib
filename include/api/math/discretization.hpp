@@ -2,6 +2,9 @@
 
 #include "Eigen/Core"
 #include "units/time.h"
+#include "unsupported/Eigen/MatrixFunctions"
+
+using namespace Eigen;
 
 namespace aekulib
 {
@@ -47,7 +50,7 @@ namespace aekulib
 
         // ϕ = eᴹᵀ = [A_d  B_d]
         //           [ 0    I ]
-        auto phi = (M * dt.value()); // DONT FORGET TO USE MATRIX EXPONENTIAL AFTER REIMPORTING EIGEN
+        auto phi = (M * dt.value()).exp(); // DONT FORGET TO USE MATRIX EXPONENTIAL AFTER REIMPORTING EIGEN
 
         *discA = phi.template block<States, States>(0, 0);
         *discB = phi.template block<States, Inputs>(0, States);

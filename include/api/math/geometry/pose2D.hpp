@@ -57,7 +57,7 @@ namespace aekulib
          * @param matrix The affine transformation matrix.
          * @throws std::domain_error if the affine transformation matrix is invalid.
          */
-        constexpr explicit Pose2D(const Eigen::Matrix3d &matrix)
+        explicit Pose2D(const Eigen::Matrix3d &matrix)
             : translation{Eigen::Vector2d{{matrix(0, 2)}, {matrix(1, 2)}}},
               rotation{Eigen::Matrix2d{{matrix(0, 0), matrix(0, 1)}, {matrix(1, 0), matrix(1, 1)}}}
         {
@@ -230,7 +230,7 @@ namespace aekulib
         /**
          * Returns an affine transformation matrix representation of this pose.
          */
-        constexpr Eigen::Matrix3d toMatrix() const
+        Eigen::Matrix3d toMatrix() const
         {
             auto vec = translation.toVector();
             auto mat = rotation.toMatrix();

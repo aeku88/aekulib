@@ -19,7 +19,7 @@ namespace aekulib
 
         lastOrientation = sensors->getOrientation();
         pose = Pose2D(newPose.getTranslation(), sensors->getOrientation());
-
+        lastSensorVals = sensors->getEncoderVals();
         return pose;
     }
 }

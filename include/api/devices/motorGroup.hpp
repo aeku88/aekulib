@@ -12,6 +12,7 @@
 #include "units/impedance.h"
 #include <cstdint>
 #include <initializer_list>
+#include <memory>
 
 using namespace units;
 using namespace units::literals;
@@ -94,7 +95,8 @@ namespace aekulib
          */
         volts<> getVoltage() const;
 
+        std::shared_ptr<pros::MotorGroup> m_motorGroup;
+
       private:
-        std::unique_ptr<pros::MotorGroup> m_motorGroup;
     };
 }

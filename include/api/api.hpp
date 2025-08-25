@@ -14,6 +14,8 @@
 
 #include "api/odometry/odometry.hpp"
 
+#include "squiggles/squiggles.hpp"
+
 #include "units.h"
 
 using namespace units;

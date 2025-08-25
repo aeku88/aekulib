@@ -1,14 +1,17 @@
 #pragma once
 
+#include "api/devices/motorGroup.hpp"
 #include "api/devices/rotationSensor.hpp"
 #include "api/devices/imu.hpp"
 #include "api/math/geometry/rotation2D.hpp"
 #include "pros/abstract_motor.hpp"
 
+#include "units/acceleration.h"
 #include "units/angular_velocity.h"
 #include "units/length.h"
 #include "units/mass.h"
 #include "units/velocity.h"
+#include "units/torque.h"
 #include <cstddef>
 
 using namespace units;
@@ -43,6 +46,12 @@ namespace aekulib
             return {gearRatio * motorVelocity * getWheelDiameter() * M_PI / 1_tr,
                     (1_rad * gearRatio * motorVelocity * getWheelDiameter() * M_PI / 1_tr) / trackWidth};
         }
+
+        inline inches_per_second_squared<> getMaxAcceleration() const
+        {
+            return (.15_Nm / (wheelDiameter / 2.0) * 6) / mass;
+        }
+
         inline kilograms<> getMass() const { return mass; }
 
       private:
@@ -57,21 +66,29 @@ namespace aekulib
     {
       public:
         ChassisSensors(const std::shared_ptr<RotationSensor> ileft,
-                       const std::shared_ptr<RotationSensor> iright,
-                       const std::shared_ptr<RotationSensor> imiddle, const std::shared_ptr<IMU> iimu,
+                       const std::shared_ptr<RotationSensor> iright, const std::shared_ptr<IMU> iimu,
                        const std::shared_ptr<ChassisConfiguration> iconfig)
-            : left(ileft), right(iright), middle(imiddle), imu(iimu), config(iconfig)
-        {}
+            : left(ileft), right(iright), imu(iimu), config(iconfig)
+        {
+            left->reset();
+            left->resetPosition();
+
+            right->reset();
+            right->resetPosition();
+        }
 
         Eigen::Vector2<inches<>> getEncoderVals() const
         {
-            return {left->getPosition() * config->getWheelDiameter() * M_PI / 1_rad,
-                    right->getPosition() * config->getWheelDiameter() * M_PI / 1_rad};
+            return {convert<turns<>>(left->getPosition()).value() * config->getWheelDiameter() * M_PI
+                      * config->getGearRatio(),
+                    convert<turns<>>(right->getPosition()).value() * config->getWheelDiameter() * M_PI
+                      * config->getGearRatio()};
         }
-        Rotation2D getOrientation() const;
+        Rotation2D getOrientation() const { return {imu->getYaw()}; };
 
       private:
-        std::shared_ptr<RotationSensor> left = nullptr, right = nullptr, middle = nullptr;
+        std::shared_ptr<RotationSensor> left = nullptr, right = nullptr;
+        std::shared_ptr<MotorGroup> middle = nullptr;
         std::shared_ptr<IMU> imu = nullptr;
         std::shared_ptr<ChassisConfiguration> config = nullptr;
     };

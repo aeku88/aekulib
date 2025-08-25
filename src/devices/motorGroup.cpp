@@ -1,17 +1,20 @@
 #include "api/devices/motorGroup.hpp"
+#include <memory>
 
 namespace aekulib
 {
     MotorGroup::MotorGroup(const std::initializer_list<int8_t> ports, const pros::v5::MotorGears gearset)
-        : m_motorGroup(std::make_unique<pros::MotorGroup>(ports, gearset))
+        : m_motorGroup(std::make_shared<pros::MotorGroup>(ports, gearset))
     {
-        m_motorGroup->set_encoder_units(pros::MotorEncoderUnits::degrees);
+        m_motorGroup->set_encoder_units(pros::MotorUnits::degrees);
+        this->resetPosition();
     }
 
     MotorGroup::MotorGroup(const std::vector<int8_t> ports, const pros::v5::MotorGears gearset)
-        : m_motorGroup(std::make_unique<pros::MotorGroup>(ports, gearset))
+        : m_motorGroup(std::make_shared<pros::MotorGroup>(ports, gearset))
     {
-        m_motorGroup->set_encoder_units(pros::MotorEncoderUnits::degrees);
+        m_motorGroup->set_encoder_units(pros::MotorUnits::degrees);
+        this->resetPosition();
     }
 
     void MotorGroup::move(const volts<> voltage) const
@@ -30,7 +33,12 @@ namespace aekulib
 
     void MotorGroup::resetPosition() const { m_motorGroup->tare_position(); }
 
-    degrees<> MotorGroup::getPosition() const { return degrees(m_motorGroup->get_position()); }
+    degrees<> MotorGroup::getPosition() const
+    {
+        return degrees(
+          (m_motorGroup->get_position(0) + m_motorGroup->get_position(1) + m_motorGroup->get_position(2))
+          / 3);
+    }
 
     revolutions_per_minute<> MotorGroup::getTargetVelocity() const
     {

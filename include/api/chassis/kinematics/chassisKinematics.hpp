@@ -2,10 +2,11 @@
 
 #include "api/chassis/chassisConfiguration.hpp"
 
-#include "Eigen/Eigen"
+#include "Eigen/Core"
 #include "api/chassis/kinematics/chassisKinematics.hpp"
 #include "api/math/geometry/twist2D.hpp"
 #include "units/angular_velocity.h"
+#include "units/core.h"
 #include "units/velocity.h"
 
 using namespace units;
@@ -22,6 +23,9 @@ namespace aekulib
 
         Eigen::Vector2<revolutions_per_minute<>>
         inverse(const std::pair<inches_per_second<>, radians_per_second<>> ichassisVelocities);
+
+        Eigen::Vector2<revolutions_per_minute<>>
+        inverse(const inches_per_second<> linVel, const double curvature);
 
         Twist2D toTwist2D(Eigen::Vector2<inches<>> distances) const
         {
