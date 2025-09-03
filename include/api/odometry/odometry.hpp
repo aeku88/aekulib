@@ -24,6 +24,13 @@ namespace aekulib
 
         inline Pose2D getPose() const { return pose; }
 
+        inline void setPose(const Pose2D &ipose)
+        {
+            gyroOffset = gyroOffset + (ipose.getRotation() - pose.getRotation());
+            pose = ipose;
+            lastOrientation = ipose.getRotation();
+        }
+
       private:
         std::shared_ptr<ChassisSensors> sensors = nullptr;
 
@@ -31,7 +38,7 @@ namespace aekulib
 
         Eigen::Vector2<inches<>> lastSensorVals = {0, 0};
 
-        Rotation2D lastOrientation = {0_rad};
+        Rotation2D lastOrientation, gyroOffset = {0_rad};
 
         Pose2D pose;
     };

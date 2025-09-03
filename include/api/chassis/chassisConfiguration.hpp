@@ -43,13 +43,13 @@ namespace aekulib
         inline double getGearRatio() const { return gearRatio; }
         inline std::pair<inches_per_second<>, radians_per_second<>> getMaxVelocities() const
         {
-            return {gearRatio * motorVelocity * getWheelDiameter() * M_PI / 1_tr,
+            return {.9 * gearRatio * motorVelocity * getWheelDiameter() * M_PI / 1_tr,
                     (1_rad * gearRatio * motorVelocity * getWheelDiameter() * M_PI / 1_tr) / trackWidth};
         }
 
         inline inches_per_second_squared<> getMaxAcceleration() const
         {
-            return (.15_Nm / (wheelDiameter / 2.0) * 6) / mass;
+            return (.1_Nm / (wheelDiameter / 2.0) * 6) / mass;
         }
 
         inline kilograms<> getMass() const { return mass; }

@@ -1,5 +1,7 @@
 #include "main.h"
 #include "Eigen/src/Core/Matrix.h"
+#include "api/chassis/control/LTVUnicycleController.hpp"
+#include "api/chassis/control/chassisController.hpp"
 #include "api/devices/rotationSensor.hpp"
 #include "api/math/geometry/pose2D.hpp"
 #include "api/odometry/odometry.hpp"
@@ -9,6 +11,7 @@
 #include "pros/misc.h"
 #include "squiggles/math/utils.hpp"
 #include "units/core.h"
+#include <math.h>
 
 /**
  * A callback function for LLEMU's center button.
@@ -90,17 +93,17 @@ std::vector<int8_t> leftPorts = {-11, -12, -13}, rightPorts = {18, 19, 20};
 auto left = std::make_shared<aekulib::MotorGroup>(leftPorts, pros::MotorGears::blue),
      right = std::make_shared<aekulib::MotorGroup>(rightPorts, pros::MotorGears::blue);
 
-auto leftRot = std::make_shared<aekulib::RotationSensor>(1),
-     rightRot = std::make_shared<aekulib::RotationSensor>(-10);
+auto leftRot = std::make_shared<aekulib::RotationSensor>(3),
+     rightRot = std::make_shared<aekulib::RotationSensor>(-9);
 
-auto rollers = std::make_shared<aekulib::Motor>(1), topRoller = std::make_shared<aekulib::Motor>(2);
+auto rollers = std::make_shared<aekulib::Motor>(2), topRoller = std::make_shared<aekulib::Motor>(-1);
 
-auto imu = std::make_shared<aekulib::IMU>(9);
+auto imu = std::make_shared<aekulib::IMU>(14);
 
 auto model = std::make_shared<aekulib::DifferentialDriveChassisModelIntegrated>(left, right);
 
-auto config = std::make_shared<aekulib::ChassisConfiguration>(3.25_in, 8.375_in, pros::MotorGears::blue,
-                                                              36.0 / 48.0, 6_lb);
+auto config = std::make_shared<aekulib::ChassisConfiguration>(3.25_in, 8.5_in, pros::MotorGears::blue,
+                                                              36.0 / 48.0, 15_lb);
 
 auto kinematics = std::make_shared<aekulib::ChassisKinematics>(config);
 
@@ -108,22 +111,28 @@ auto sensors = std::make_shared<aekulib::ChassisSensors>(leftRot, rightRot, imu,
 
 auto odometry = std::make_shared<aekulib::Odometry>(sensors, kinematics);
 
-auto controller = LTVUnicycleController({0.1, 0.1, 2.0}, {1.0, 2.0}, 10_ms, config->getMaxVelocities().first);
+auto controller = LTVUnicycleController({.5, .5, .025}, {1.3, .15}, 10_ms, config->getMaxVelocities().first);
 
-const double MAX_VEL = convert<meters_per_second<>>(config->getMaxVelocities().first).value();
-const double MAX_ACCEL = convert<meters_per_second_squared<>>(config->getMaxAcceleration()).value();
-const double MAX_JERK = MAX_ACCEL * 1.5;
+auto chassis = ChassisController(std::make_shared<LTVUnicycleController>(controller), config, sensors,
+                                 odometry, left, right);
 
-pros::ADIDigitalOut indexer = pros::adi::DigitalOut('G', HIGH);
-bool state_indexer = true;
+pros::ADIDigitalOut matchload = pros::adi::DigitalOut('G', LOW);
+bool state_matchload = false;
 
 auto aligner = pros::adi::DigitalOut('H', LOW);
-bool state_aligner = true;
+bool state_aligner = false;
+
+auto descore = pros::adi::DigitalOut('F', LOW);
+bool state_dihscore = false;
 
 void opcontrol()
 {
     pros::Controller master(pros::E_CONTROLLER_MASTER);
 
+    imu->reset();
+    while(imu->isCalibrating())
+        pros::delay(10);
+    imu->tare();
     /*while(true)
     {
         inches_per_second<> linVel
@@ -163,37 +172,27 @@ void opcontrol()
             aligner.set_value(state_aligner);
         }
 
-        pros::delay(10);
-    }*/
+        else if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
+        {
+            state_dihscore = !state_dihscore;
+            descore.set_value(state_dihscore);
+        }
 
-    imu->reset();
-    while(imu->isCalibrating())
-        pros::delay(5);
-    imu->tare();
-
-    auto constraints = squiggles::Constraints(MAX_VEL, MAX_ACCEL, MAX_JERK);
-    auto generator = squiggles::SplineGenerator(
-      constraints,
-      std::make_shared<squiggles::TankModel>(convert<meters<>>(config->getTrackWidth()).value(), constraints),
-      .01);
-
-    auto path = generator.generate({squiggles::Pose(0.0, 0.0, 0.0), squiggles::Pose(.3, .3, 0)});
-    for(std::size_t i = 0; i < path.size(); ++i)
-    {
-        auto right = convert<inches_per_second<>>(path[i].wheel_velocities[0] * mps)
-                     * (360_deg / (config->getWheelDiameter() * pi)) * config->getGearRatio();
-        auto left = convert<inches_per_second<>>(path[i].wheel_velocities[1] * mps)
-                    * (360_deg / (config->getWheelDiameter() * pi)) * config->getGearRatio();
-        Pose2D refPose
-          = {path[i].vector.pose.x * m, path[i].vector.pose.y * m, path[i].vector.pose.yaw * rad};
-        path[i].curvature /= 39.3701;
-        // std::cout << path[i].vector.vel * mps << ", " << path[i].vector.vel * path[i].curvature * rps <<
-        // '\n';
-        auto chassisVel = controller.calculate(refPose, odometry->update(), path[i].vector.vel * mps,
-                                               path[i].vector.vel * path[i].curvature * rps);
-
-        model->drive(kinematics->inverse(path[i].vector.vel * mps, path[i].curvature));
         pros::delay(10);
     }
-    model->drive({0_rpm, 0_rpm});
+    */
+    aligner.set_value(true);
+    rollers->move(600_rpm);
+    topRoller->move(-600_rpm);
+    odometry->setPose({19.26_in, 60.86_in, -45_deg});
+    std::vector<Pose2D> toUpperGoal
+      = {Pose2D(19.26_in, 60.86_in, -45_deg), Pose2D(48_in, 48_in, 45_deg), /*Pose2D(58_in, 58_in, 45_deg)*/};
+    chassis.setTarget(toUpperGoal);
+    chassis.drive();
+    pros::delay(300);
+
+    /*std::vector<Pose2D> toLowerGoal
+    = {Pose2D(60_in, 60_in, 45_deg), Pose2D(45_in, 95_in, 90_deg), Pose2D(52_in, 86_in, -45_deg)};
+    chassis.setTarget(toLowerGoal);
+    chassis.drive();*/
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "api/chassis/control/chassisController.hpp"
 #include "api/chassis/control/LTVUnicycleController.hpp"
 #include "api/chassis/kinematics/chassisKinematics.hpp"
 #include "api/chassis/model/DDChassisModel.hpp"

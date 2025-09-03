@@ -7,7 +7,8 @@
 #include "api/math/geometry/pose2D.hpp"
 #include "api/math/discretization.hpp"
 #include "api/solver/DARE.hpp"
-#include <map>
+#include "api/interpolating_map.hpp"
+#include <limits>
 
 using namespace units::literals;
 
@@ -49,8 +50,9 @@ namespace aekulib
                   const units::inches_per_second<> &ilinearVelocityReference,
                   const units::degrees_per_second<> &iangularVelocityReference);
 
+        Pose2D poseError = {10000_in, 10000_in, 10000 * units::rad}, poseTolerance;
+
       private:
-        std::map<units::inches_per_second<>, Eigen::Matrix<double, 2, 3>> table;
-        Pose2D poseError, poseTolerance;
+        interpolating_map<units::inches_per_second<>, Eigen::Matrix<double, 2, 3>> table;
     };
 }

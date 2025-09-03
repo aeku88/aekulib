@@ -12,14 +12,17 @@ namespace aekulib
 
     Pose2D Odometry::update()
     {
+        auto angle = sensors->getOrientation() + gyroOffset;
         auto twist = kinematics->toTwist2D(sensors->getEncoderVals(), lastSensorVals);
-        twist.dtheta = (sensors->getOrientation() - lastOrientation).radians();
+        twist.dtheta = (angle - lastOrientation).radians();
 
         auto newPose = pose.exp(twist);
 
-        lastOrientation = sensors->getOrientation();
-        pose = Pose2D(newPose.getTranslation(), sensors->getOrientation());
+        lastOrientation = angle;
+        pose = Pose2D(newPose.getTranslation(), angle);
         lastSensorVals = sensors->getEncoderVals();
+        std::cout << "x: " << pose.getX() << ", y:" << pose.getY()
+                  << ", theta: " << pose.getRotation().degrees() << '\n';
         return pose;
     }
 }

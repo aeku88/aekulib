@@ -51,6 +51,10 @@ namespace aekulib
             : translation{ix, iy}, rotation{std::move(irotation)}
         {}
 
+        constexpr Pose2D(units::inches<> ix, units::inches<> iy, units::radians<> iangle)
+            : translation{ix, iy}, rotation{iangle}
+        {}
+
         /**
          * Constructs a pose with the specified affine transformation matrix.
          *

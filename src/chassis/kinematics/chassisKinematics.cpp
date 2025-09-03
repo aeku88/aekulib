@@ -32,15 +32,14 @@ namespace aekulib
                        * ips; // rad unit constant for units match; angle has
                               // dimension in nholthaus/units implementation
         auto rightVel = (linVel.value() - m_config->getTrackWidth().value() / 2.0 * angVel.value()) * ips;
-        std::cout << linVel << ", " << angVel << '\n';
         auto max_wheel_vel = std::max(abs(leftVel), abs(rightVel));
 
-        if(max_wheel_vel > m_config->getMaxVelocities().first)
+        /*if(max_wheel_vel > m_config->getMaxVelocities().first)
         {
             // normalize the wheel velocities
             leftVel = leftVel / max_wheel_vel * m_config->getMaxVelocities().first;
             rightVel = rightVel / max_wheel_vel * m_config->getMaxVelocities().first;
-        }
+        }*/
 
         return {leftVel * (360_deg / (m_config->getWheelDiameter() * pi)) * m_config->getGearRatio(),
                 rightVel * (360_deg / (m_config->getWheelDiameter() * pi)) * m_config->getGearRatio()};

@@ -29,8 +29,8 @@ namespace aekulib
             auto S = DARE(discA, discB, Q, R);
 
             // K = (BᵀSB + R)⁻¹BᵀSA
-            table.emplace(velocity,
-                          (discB.transpose() * S * discB + R).llt().solve(discB.transpose() * S * discA));
+            table.insert(velocity,
+                         (discB.transpose() * S * discB + R).llt().solve(discB.transpose() * S * discA));
         }
     }
 
@@ -41,7 +41,7 @@ namespace aekulib
     {
         poseError = ireferencePose.relativeTo(icurrentPose);
 
-        const auto &K = table[round(ilinearVelocityReference * 100.0) / 100.0];
+        const auto &K = table[ilinearVelocityReference];
         Eigen::Vector3d e{poseError.getX().value(), poseError.getY().value(),
                           poseError.getRotation().radians().value()};
         Eigen::Vector2d u = K * e;
